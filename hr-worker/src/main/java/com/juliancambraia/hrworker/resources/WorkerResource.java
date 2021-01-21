@@ -4,7 +4,6 @@ import com.juliancambraia.hrworker.entities.Worker;
 import com.juliancambraia.hrworker.repositories.WorkerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +19,6 @@ import java.util.List;
 @RequestMapping(value = "/workers")
 public class WorkerResource {
 
-    @Value("${test.config}")
-    private String testConfig;
-
     private Environment env;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerResource.class);
@@ -36,9 +32,6 @@ public class WorkerResource {
 
     @GetMapping(value = "/configs")
     public ResponseEntity<Void> getConfigs() {
-
-        LOGGER.info("CONFIGS : " + testConfig);
-
         return ResponseEntity.noContent().build();
     }
 
@@ -50,9 +43,6 @@ public class WorkerResource {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Worker> findById(@PathVariable Long id) throws InterruptedException {
-        // simula erro para chamada alternativa Hystrix
-        Thread.sleep(3000L);
-
         LOGGER.info("PORT: " + env.getProperty("local.server.port"));
         return ResponseEntity.ok(repository.findById(id).get());
     }
